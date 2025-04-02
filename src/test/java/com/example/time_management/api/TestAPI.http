@@ -1,0 +1,92 @@
+# /auth/register
+#注册用户的API测试
+POST /auth/register HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+    "username": "Milky",
+    "phone": "13912345678",
+    "password": "123456",
+    "verificationCode": "251038"
+}
+
+# /auth/send-verificationcode
+# 测试发送验证码的API，但并不是真正发送，api还没调用
+POST /auth/send-verificationcode HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+    "phone": "13912345678"
+}
+
+POST /auth/send-verificationcode HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+    "phone": "14912345679"
+}
+
+# /auth/send-verificationcode
+# 测试手机号不规范的API调用情况
+POST /auth/send-verificationcode HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+    "phone": "14912345679"
+}
+
+
+
+POST /auth/login HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+    "username": "Milky",
+    "password": "123456"
+}
+
+GET /plans/all HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNzQzNDY5MDQ1LCJleHAiOjE3NDM1MDUwNDV9.ht-X0QRNdU7xbvxhlR4dPy_98OxcXFgqNqzdFggO_1A
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+
+
+POST /plans HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNzQzNDY5MDQ1LCJleHAiOjE3NDM1MDUwNDV9.ht-X0QRNdU7xbvxhlR4dPy_98OxcXFgqNqzdFggO_1A
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+  "title": "学习vue3",
+  "startTime": "2025-06-18T13:03",
+  "endTime": "2026-03-12T19:12",
+  "isCompleted": false,
+  "description": "vue3知识点太多了，要好好学习，多敲代码。"
+}
+
+POST /plans/{planId} HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzMzUwNzU3LCJleHAiOjE3NDMzNTQzNTd9.46cSvYzcvou9lrzDpHAO4f_CmbiUcG0JOB-urZz6woo
+Host:localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+  "title": "学习vue3",
+  "startTime": "2025-06-18T13:03:27.748Z",
+  "endTime": "2026-03-12T19:12:13.591Z",
+  "isCompleted": true,
+  "description": "vue4知识点太多了，要好好学习，多敲代码。"
+}
