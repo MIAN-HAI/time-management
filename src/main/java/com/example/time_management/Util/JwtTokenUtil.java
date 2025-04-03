@@ -31,7 +31,7 @@ public class JwtTokenUtil {
                 .setSubject(String.valueOf(id))
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + EXPIRATION_TIME))
-                .signWith(key, SignatureAlgorithm.HS256) //  新写法
+                .signWith(key, SignatureAlgorithm.HS256) // 新写法
                 .compact();
     }
 

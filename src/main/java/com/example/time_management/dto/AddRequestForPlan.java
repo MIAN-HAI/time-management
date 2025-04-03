@@ -7,10 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class AddRequestForPlan {
     private String title;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime startTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime endTime;
     private Boolean isCompleted;
     private String description;

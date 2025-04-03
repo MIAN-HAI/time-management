@@ -93,7 +93,7 @@ public class UserService {
         ops.set("verification:" + phone, verificationCode, 5, TimeUnit.MINUTES);
 
         // 这里可以调用短信 API 发送验证码
-
+        
     }
 
     // 登录的验证服务

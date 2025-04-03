@@ -10,9 +10,8 @@ import lombok.Data;
 public class AddRequestForToDo {
     private String title;
     private String priority;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime deadline;
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private boolean isCompleted;
     private LocalDateTime reminderTime;
     private String description;
 }

@@ -55,8 +55,8 @@ Cache-Control: no-cache
     "password": "123456"
 }
 
-GET /plans/all HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNzQzNDY5MDQ1LCJleHAiOjE3NDM1MDUwNDV9.ht-X0QRNdU7xbvxhlR4dPy_98OxcXFgqNqzdFggO_1A
+GET /plans HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
 Host: localhost:8080
 Content-Type: application/json
 Cache-Control: no-cache
@@ -64,29 +64,116 @@ Cache-Control: no-cache
 
 
 POST /plans HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNzQzNDY5MDQ1LCJleHAiOjE3NDM1MDUwNDV9.ht-X0QRNdU7xbvxhlR4dPy_98OxcXFgqNqzdFggO_1A
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
 Host: localhost:8080
 Content-Type: application/json
 Cache-Control: no-cache
 
 {
-  "title": "学习vue3",
+  "title": "清明节回家",
   "startTime": "2025-06-18T13:03",
   "endTime": "2026-03-12T19:12",
   "isCompleted": false,
-  "description": "vue3知识点太多了，要好好学习，多敲代码。"
+  "description": "清明节开车回家，希望晚上上机可以提前结束"
 }
 
-POST /plans/{planId} HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzMzUwNzU3LCJleHAiOjE3NDMzNTQzNTd9.46cSvYzcvou9lrzDpHAO4f_CmbiUcG0JOB-urZz6woo
+PUT /plans/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
 Host:localhost:8080
 Content-Type: application/json
 Cache-Control: no-cache
 
 {
-  "title": "学习vue3",
-  "startTime": "2025-06-18T13:03:27.748Z",
-  "endTime": "2026-03-12T19:12:13.591Z",
+  "title": "学习vue4",
+  "startTime": "2025-06-18T13:03:27",
+  "endTime": "2026-03-12T19:12:13",
   "isCompleted": true,
   "description": "vue4知识点太多了，要好好学习，多敲代码。"
 }
+
+
+DELETE /plans/2 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Host:localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+
+GET /todos HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Host:localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+POST /todos HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+  "title": "完成后端与数据库的增删查改",
+  "priority": "high",
+  "deadline": "2024-03-20T18:00",
+  "description": "需要与前端进行对接"
+}
+
+PUT /todos/5 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+  "title": "清明节回家",
+  "priority": "medium",
+  "isCompleted": false,
+  "updatedAt": "2019-08-24T14:15:22.123Z",
+  "deadline": "2019-08-24T14:15:22.123Z",
+  "reminderTime": "2019-08-24T14:15:22.123Z",
+  "description": "清明节开车回家"
+}
+
+
+DELETE /todos/3 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+
+GET /plans/processes HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+
+POST  /plans/3/processes HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+  "content": "SpringBoot的各种特性——全自动化的感觉",
+  "completedTime": "2025-02-03T15:30"
+}
+
+
+PUT /plans/1/processes/1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+  "content": "看B站视频学习了vue4的计算属性",
+  "completedTime": "2019-08-24T14:15:22.123Z"
+}
+
+DELETE /plans/1/processes/3 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Host: localhost:8080
+Content-Type: application/json
+Cache-Control: no-cache

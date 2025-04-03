@@ -11,6 +11,8 @@ import com.example.time_management.models.UserPlan;
 public interface UserPlansRepository extends JpaRepository<UserPlan, Integer> {
     List<UserPlan> findByUserId(Integer userId);
 
+    
+
     // 被迫使用title重载
     Optional<UserPlan> findByPlanId(Integer planId);
 }
