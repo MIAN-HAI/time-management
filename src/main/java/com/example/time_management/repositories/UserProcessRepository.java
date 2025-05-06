@@ -14,4 +14,6 @@ public interface UserProcessRepository extends JpaRepository<UserProcess, Intege
 
     List<UserProcess> findByPlanIdIn(List<Integer> planIds);
 
+    void deleteAllByPlanId(Integer planId);
+
 }

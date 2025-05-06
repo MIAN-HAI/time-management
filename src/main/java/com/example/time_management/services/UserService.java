@@ -100,7 +100,7 @@ public class UserService {
     public LoginResponse login(String username, String password) {
         // 根据 identifier 查找用户（这里假设 identifier 可能是用户名或手机号）
         Optional<User> user = userRepository.findByUsername(username);
-        if (user == null) {
+        if (user.isEmpty()) {
             throw new UserNeverExsits("用户不存在");
         }
         // 比对密码（假设数据库中存储的是 BCrypt 加密后的密码）

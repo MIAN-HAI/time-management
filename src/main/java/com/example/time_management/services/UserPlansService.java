@@ -17,10 +17,12 @@ import com.example.time_management.repositories.UserProcessRepository;
 @Service
 public class UserPlansService {
     private final UserPlansRepository userPlansRepository;
+    private final UserProcessRepository userProcessRepository;
 
     @Autowired
-    public UserPlansService(UserPlansRepository userPlansRepository) {
+    public UserPlansService(UserPlansRepository userPlansRepository,UserProcessRepository userProcessRepository) {
         this.userPlansRepository = userPlansRepository;
+        this.userProcessRepository = userProcessRepository;
     }
 
     public List<UserPlanResponse> getUserPlans(Integer userId) {
@@ -52,6 +54,7 @@ public class UserPlansService {
         if(userId!=object.get().getUserId()){
             throw new InfoNotMatch("用户信息不匹配");
         }
+        userProcessRepository.deleteAllByPlanId(planId);
         userPlansRepository.deleteById(planId);
         return new UserPlanResponse(object.get());
     }
