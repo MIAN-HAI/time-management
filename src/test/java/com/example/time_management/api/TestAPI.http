@@ -6,10 +6,10 @@ Content-Type: application/json
 Cache-Control: no-cache
 
 {
-    "username": "Milky",
-    "phone": "13912345678",
-    "password": "123456",
-    "verificationCode": "251038"
+    "username": "xiedan",
+    "phoneNumber": "13912345679",
+    "password": "123456"
+    //"verificationCode": "251038"
 }
 
 # /auth/send-verificationcode
@@ -119,7 +119,7 @@ Cache-Control: no-cache
 }
 
 PUT /todos/5 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ2NjE1MjgzLCJleHAiOjE3NDY2NTEyODN9.EkGUPpZPLn6hgQeH5ElsoNSplE9zFBd89yzvpxggW7A
 Host: localhost:8080
 Content-Type: application/json
 Cache-Control: no-cache
@@ -127,10 +127,10 @@ Cache-Control: no-cache
 {
   "title": "清明节回家",
   "priority": "medium",
-  "isCompleted": false,
+  "isCompleted": true,
   "updatedAt": "2019-08-24T14:15:22.123Z",
   "deadline": "2019-08-24T14:15:22.123Z",
-  "reminderTime": "2019-08-24T14:15:22.123Z",
+  "reminderTime": "2019-08-24T14:15:21.123Z",
   "description": "清明节开车回家"
 }
 

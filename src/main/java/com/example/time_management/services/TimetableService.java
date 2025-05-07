@@ -7,6 +7,7 @@ import com.example.time_management.dto.TimetableResponse;
 import com.example.time_management.repositories.TimetableRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,14 +29,12 @@ public class TimetableService {
     private final TimetableRepository repository;
     private final ObjectMapper mapper;
 
-    @Value("${timetable.termStartDate:2025-02-17}")
-    private String TERM_START_DATE;
-
     private static final List<String> WEEKDAYS = Arrays.asList(
         "星期一","星期二","星期三","星期四","星期五","星期六","星期日"
     );
     private static final Pattern BLANKS = Pattern.compile("\\s+");
 
+    @Autowired
     public TimetableService(TimetableRepository repository, ObjectMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
@@ -44,21 +43,21 @@ public class TimetableService {
     /**
      * 解析 PDF 并保存到数据库，返回解析结果
      */
-    public TimetableResponse parseAndSave(MultipartFile file, Long userId) throws IOException {
+    public TimetableResponse parseAndSave(MultipartFile file, Long userId,String termStart) throws IOException {
         File pdf = toFile(file);
         List<Map<String, String>> raw = extractRaw(pdf);
         List<Map<String, String>> cont = mergeContinuationLines(raw);
         List<Map<String, String>> paged = mergeMultiPage(cont);
         List<TimetableEntry> entries = normalize(paged);
 
-        TimetableResponse resp = new TimetableResponse(TERM_START_DATE, entries);
+        TimetableResponse resp = new TimetableResponse(termStart, entries);
         String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(resp);
 
         Timetable entity = new Timetable();
         entity.setUserId(userId);
-        entity.setTermStartDate(TERM_START_DATE);
+        entity.setTermStartDate(termStart);
         entity.setJsonData(json);
-        entity.setCreatedAt(LocalDateTime.now());
+        // entity.setCreatedAt(LocalDateTime.now());
         repository.save(entity);
 
         return resp;
@@ -67,13 +66,12 @@ public class TimetableService {
     /**
      * 查询某用户所有课程表
      */
-    public List<TimetableResponse> getByUserId(Long userId) throws IOException {
-        List<Timetable> list = repository.findByUserId(userId);
-        List<TimetableResponse> result = new ArrayList<>();
-        for (Timetable t : list) {
-            TimetableResponse tr = mapper.readValue(t.getJsonData(), TimetableResponse.class);
-            result.add(tr);
-        }
+    public TimetableResponse getByUserId(Long userId) throws IOException {
+        TimetableResponse result = new TimetableResponse();
+        List<Timetable> entities = repository.findByUserId(userId);
+        Timetable entity = entities.get(0);
+        result=mapper.readValue(entity.getJsonData(),TimetableResponse.class);
+        result.setTermStartDate(entity.getTermStartDate());
         return result;
     }
 
@@ -125,8 +123,16 @@ public class TimetableService {
                     List<RectangularTextContainer> cells = rawRows.get(r);
                     if (cells.size() != header.size()) continue;
                     Map<String, String> map = new LinkedHashMap<>();
-                    for (int c = 0; c < header.size(); c++) {
-                        map.put(header.get(c), cells.get(c).getText());
+                    if(r<10){
+                        for (int c = 0; c < header.size(); c++) {
+                            map.put(header.get(c), cells.get(c).getText());
+                        }
+                    }
+                    else{
+                        for (int c = 0; c < header.size(); c++) {
+                            if(c>0) map.put(header.get(c), cells.get(c-1).getText());
+                            else map.put(header.get(c), "");
+                        }
                     }
                     rows.add(map);
                 }
@@ -138,8 +144,11 @@ public class TimetableService {
 
 
     private List<Map<String, String>> mergeContinuationLines(List<Map<String, String>> data) {
+        // 1. 先复制一份，避免修改原 data
         List<Map<String, String>> result = new ArrayList<>(data);
         List<String> cols = new ArrayList<>(data.get(0).keySet());
+    
+        // 2. 自下而上合并那些节次为空的续行
         for (int i = result.size() - 1; i >= 0; i--) {
             String sec = result.get(i).get("节次");
             if (sec == null || sec.isEmpty()) {
@@ -148,14 +157,37 @@ public class TimetableService {
                     if ("时间段".equals(col) || "节次".equals(col)) continue;
                     String txt = result.get(i).get(col);
                     if (txt == null || txt.isEmpty()) continue;
+                    // 找到上面最近一行有值的那一行，追加内容
                     for (int j = i - 1; j >= 0; j--) {
                         String prev = result.get(j).get(col);
-                        if (prev != null && !prev.isEmpty()) { result.get(j).put(col, prev + "；" + txt); merged = true; break; }
+                        if (prev != null && !prev.isEmpty()) {
+                            result.get(j).put(col, prev + "；" + txt);
+                            merged = true;
+                            break;
+                        }
                     }
                 }
-                if (merged) result.remove(i);
+                if (merged) {
+                    result.remove(i);
+                }
             }
         }
+    
+        // 3. 再正序遍历，把空的“时间段”补成上一个非空时间段
+        String lastTimeSlot = null;
+        for (Map<String, String> row : result) {
+            String ts = row.get("时间段");
+            if (ts == null || ts.trim().isEmpty()) {
+                // 填充
+                if (lastTimeSlot != null) {
+                    row.put("时间段", lastTimeSlot);
+                }
+            } else {
+                // 更新 lastTimeSlot
+                lastTimeSlot = ts.trim();
+            }
+        }
+    
         return result;
     }
 
@@ -193,12 +225,17 @@ public class TimetableService {
             TimetableEntry te = new TimetableEntry();
             te.setTimeSlot(r.get("时间段"));
             te.setSection(r.get("节次"));
+
             Map<String, List<Course>> dayMap = new LinkedHashMap<>();
             for (String day : WEEKDAYS) {
                 String cell = r.get(day);
-                if (cell == null || cell.isEmpty()) dayMap.put(day, new ArrayList<>());
-                else {
-                    List<Course> list = Arrays.stream(cell.split("\\n")).filter(ln -> !ln.trim().isEmpty()).map(this::parseCourseLine).collect(Collectors.toList());
+                if (cell == null || cell.trim().isEmpty()) {
+                    dayMap.put(day, new ArrayList<>());
+                } else {
+                    List<Course> list = Arrays.stream(cell.split("\\n"))
+                        .filter(ln -> !ln.trim().isEmpty())
+                        .map(this::parseCourseLine)
+                        .collect(Collectors.toList());
                     dayMap.put(day, list);
                 }
             }
@@ -209,27 +246,54 @@ public class TimetableService {
     }
 
     private Course parseCourseLine(String line) {
-        Course c = new Course();
+        // 先做清洗
         String txt = cleanText(line);
-        String[] parts = txt.split("[／\\/]");
-        c.setCourseName(parts.length > 0 ? parts[0] : "");
-        if (parts.length > 1) c.setSlot(parts[1]);
-        if (parts.length > 2) c.setWeeks(parts[2]);
-        Map<String, String> extras = new LinkedHashMap<>();
+        // 按全／半角斜杠拆分：0=课程名,1=节次,2=周次,后面为 key:value
+        String[] parts = txt.split("[／\\\\/]");
+
+        Course c = new Course();
+        // 0: 课程名
+        if (parts.length > 0) c.set课程名(parts[0].trim());
+        // 1: 节次
+        if (parts.length > 1) c.set节次(parts[1].trim());
+        // 2: 周次
+        if (parts.length > 2) c.set周次(parts[2].trim());
+
+        // 从第 3 段起，每段形如 “键:值” 或 “键：值”
         for (int i = 3; i < parts.length; i++) {
             String[] kv = parts[i].split("[:：]", 2);
-            if (kv.length == 2) extras.put(kv[0].trim(), kv[1].trim());
+            if (kv.length != 2) continue;
+            String key = kv[0].trim();
+            String val = kv[1].trim();
+
+            switch (key) {
+                case "校区":           c.set校区(val);           break;
+                case "场地":           c.set场地(val);           break;
+                case "教师":           c.set教师(val);           break;
+                case "教学班":         c.set教学班(val);         break;
+                case "教学班组成":     c.set教学班组成(val);     break;
+                case "考核方式":       c.set考核方式(val);       break;
+                case "选课备注":       c.set选课备注(val);       break;
+                case "课程学时组成":   c.set课程学时组成(val);   break;
+                case "周学时":         c.set周学时(val);         break;
+                case "总学时":         c.set总学时(val);         break;
+                case "学分":           c.set学分(val);           break;
+                case "科研实践":       c.set科研实践(val);       break;
+                // 如果未来有更多字段，再补充 case 即可
+                default:
+                    // 忽略不认识的字段
+            }
         }
-        c.setExtras(extras);
         return c;
     }
+
 
     private String cleanText(String text) {
         String t = text.replace('：', ':').replace("*", "");
         t = BLANKS.matcher(t).replaceAll("");
         t = t.replaceAll("\\((\\d+-\\d+节)\\)(?=\\d+-\\d+周)", "/$1/");
         t = t.replaceAll("\\((\\d+-\\d+节)\\)(\\d+周)", "/$1/$2");
-        t = t.replaceAll("(学分:\\d+(?:\\.\\d+)?)(?!\\n)", "$1\\n");
+        t = t.replaceAll("(学分:\\d+(?:\\.\\d+)?)(?!\n)", "$1\n");
         return t.trim();
     }
 }

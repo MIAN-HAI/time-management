@@ -34,11 +34,12 @@ public class TimetableController {
     @PostMapping
     public ResponseEntity<?> upload(
             @RequestParam("file") MultipartFile file,
-            @RequestHeader("Authorization") String authHeader
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam("termStart") String termStart
     ){
         try{
             long userId=JwtTokenUtil.getIdFromToken(TokenUtil.extractToken(authHeader));
-            TimetableResponse resp = service.parseAndSave(file, userId);
+            TimetableResponse resp = service.parseAndSave(file, userId,termStart);
             return ResponseEntity.ok(resp);
         }catch(IOException e){
             System.out.println(111111);
@@ -51,16 +52,16 @@ public class TimetableController {
     /**
      * 获取指定用户的所有课程表
      */
-    // @GetMapping
-    // public ResponseEntity<?> getByUser(@RequestHeader("Authorization") String authHeader){
-    //     try{
-    //         long userId=JwtTokenUtil.getIdFromToken(TokenUtil.extractToken(authHeader));
-    //         TimetableResponse resp = service.getByUserId(userId);
-    //         return ResponseEntity.ok(resp);
-    //     }catch(IOException e){
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(400,e.getMessage(),null));
-    //     }catch(TokenInvalid e){
-    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(400,e.getMessage(),null));
-    //     }
-    // }
+    @GetMapping
+    public ResponseEntity<?> getByUser(@RequestHeader("Authorization") String authHeader){
+        try{
+            long userId=JwtTokenUtil.getIdFromToken(TokenUtil.extractToken(authHeader));
+            TimetableResponse resp = service.getByUserId(userId);
+            return ResponseEntity.ok(resp);
+        }catch(IOException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(400,e.getMessage(),null));
+        }catch(TokenInvalid e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(400,e.getMessage(),null));
+        }
+    }
 }

@@ -46,7 +46,7 @@ public class UserService {
     }
 
     // 注册新用户
-    public User registerUser(String username, String phone, String password, String verificationCode) {
+    public User registerUser(String username, String phone, String password) {
         // 检查用户名是否已存在
         if (userRepository.findByUsername(username).isPresent()) {
             throw new UserAlreadyExistsException("用户名已存在");
@@ -57,16 +57,16 @@ public class UserService {
             throw new UserAlreadyExistsException("手机已注册");
         }
 
-        // 检查验证码是否正确
-        // 取出redis中的手机号
-        String storedVerificationCode = redisTemplate.opsForValue().get("verification:" + phone);
-        if (storedVerificationCode == null) {
-            throw new VerificationCodeInvalid("验证码无效");
-        }
-        // 取出redis中的验证码
-        if (!storedVerificationCode.equals(verificationCode)) {
-            throw new VerificationCodeError("验证码错误");
-        }
+        // // 检查验证码是否正确
+        // // 取出redis中的手机号
+        // String storedVerificationCode = redisTemplate.opsForValue().get("verification:" + phone);
+        // if (storedVerificationCode == null) {
+        //     throw new VerificationCodeInvalid("验证码无效");
+        // }
+        // // 取出redis中的验证码
+        // if (!storedVerificationCode.equals(verificationCode)) {
+        //     throw new VerificationCodeError("验证码错误");
+        // }
 
         // 加密密码
         String hashedPassword = passwordEncoder.encode(password);

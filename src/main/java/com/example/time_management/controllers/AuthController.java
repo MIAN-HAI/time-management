@@ -42,8 +42,7 @@ public class AuthController {
     // springboot自动解析前端传来的JSON数据，并封装到RegisterRequest对象中
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest request) {
         try {
-            userService.registerUser(request.getUsername(), request.getPhone(), request.getPassword(),
-                    request.getVerificationCode());
+            userService.registerUser(request.getUsername(), request.getPhoneNumber(), request.getPassword());
             return ResponseEntity.ok(new ApiResponse<>(200, "注册成功", null));
         } catch (UserAlreadyExistsException e) {// 该函数中手动处理了UserAlreadyExistsException 异常，
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse<>(400, e.getMessage(), null));
