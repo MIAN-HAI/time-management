@@ -78,7 +78,7 @@ Cache-Control: no-cache
 }
 
 PUT /plans/1 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ2NjE1MjgzLCJleHAiOjE3NDY2NTEyODN9.EkGUPpZPLn6hgQeH5ElsoNSplE9zFBd89yzvpxggW7A
 Host:localhost:8080
 Content-Type: application/json
 Cache-Control: no-cache
@@ -92,8 +92,8 @@ Cache-Control: no-cache
 }
 
 
-DELETE /plans/2 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQzNjQzMDIyLCJleHAiOjE3NDM2NzkwMjJ9.VJcm69mgx8vH_FdAVA1-Ps6ts5ZeSXjxBD8yOQAA4VU
+DELETE /plans/7 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzQ2NjE1MjgzLCJleHAiOjE3NDY2NTEyODN9.EkGUPpZPLn6hgQeH5ElsoNSplE9zFBd89yzvpxggW7A
 Host:localhost:8080
 Content-Type: application/json
 Cache-Control: no-cache
@@ -127,7 +127,7 @@ Cache-Control: no-cache
 {
   "title": "清明节回家",
   "priority": "medium",
-  "isCompleted": true,
+  "isCompleted": false,
   "updatedAt": "2019-08-24T14:15:22.123Z",
   "deadline": "2019-08-24T14:15:22.123Z",
   "reminderTime": "2019-08-24T14:15:21.123Z",

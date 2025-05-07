@@ -14,6 +14,8 @@ import com.example.time_management.models.UserPlan;
 import com.example.time_management.repositories.UserPlansRepository;
 import com.example.time_management.repositories.UserProcessRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserPlansService {
     private final UserPlansRepository userPlansRepository;
@@ -46,6 +48,7 @@ public class UserPlansService {
         return new UserPlanResponse(userPlansRepository.save(userPlan));
     }
 
+    @Transactional
     public UserPlanResponse deletePlan(Integer planId,Integer userId) {
         Optional<UserPlan> object = userPlansRepository.findByPlanId(planId);
         if (object.isEmpty()) {

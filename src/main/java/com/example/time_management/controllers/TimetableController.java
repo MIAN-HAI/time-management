@@ -34,12 +34,12 @@ public class TimetableController {
     @PostMapping
     public ResponseEntity<?> upload(
             @RequestParam("file") MultipartFile file,
-            @RequestHeader("Authorization") String authHeader,
-            @RequestParam("termStart") String termStart
+            @RequestHeader("Authorization") String authHeader
+            //@RequestParam("termStart") String termStart
     ){
         try{
             long userId=JwtTokenUtil.getIdFromToken(TokenUtil.extractToken(authHeader));
-            TimetableResponse resp = service.parseAndSave(file, userId,termStart);
+            TimetableResponse resp = service.parseAndSave(file, userId,"2025-2-17");
             return ResponseEntity.ok(resp);
         }catch(IOException e){
             System.out.println(111111);

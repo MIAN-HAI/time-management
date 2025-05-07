@@ -12,6 +12,8 @@ import com.example.time_management.exceptions.UpdateObjectNotExists;
 import com.example.time_management.models.UserToDo;
 import com.example.time_management.repositories.UserToDoRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserToDoService {
     private final UserToDoRepository userToDoRepository;
@@ -43,6 +45,7 @@ public class UserToDoService {
         return new UserToDoResponse(userToDoRepository.save(userToDo));
     }
 
+    @Transactional
     public UserToDoResponse deleteToDo(Integer todoId, Integer userId) {
         java.util.Optional<UserToDo> object = userToDoRepository.findById(todoId);
         if (object.isEmpty()) {

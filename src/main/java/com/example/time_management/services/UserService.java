@@ -112,6 +112,6 @@ public class UserService {
         userRepository.save(user.get());
 
         String token = JwtTokenUtil.generateToken(user.get().getId());
-        return new LoginResponse(token, user.get().getId(), user.get().getUsername());
+        return new LoginResponse(token, user.get().getUsername());
     }
 }

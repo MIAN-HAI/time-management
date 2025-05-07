@@ -64,7 +64,7 @@ public class ContentForToDoController {
         try{
             Integer userId=JwtTokenUtil.getIdFromToken(TokenUtil.extractToken(authHeader));
             return ResponseEntity.ok(new ApiResponse<UserToDoResponse>(201,"待办事项更新成功",
-            userToDoService.updateToDo(new UserToDo(todoId,userId,request.getPriority(),request.getTitle(),request.getDeadline(),request.getReminderTime(),request.isCompleted(),request.getUpdatedAt(),LocalDateTime.now(),request.getDescription()))));
+            userToDoService.updateToDo(new UserToDo(todoId,userId,request.getPriority(),request.getTitle(),request.getDeadline(),request.getReminderTime(),request.getIsCompleted(),request.getUpdatedAt(),LocalDateTime.now(),request.getDescription()))));
         }catch(TokenInvalid e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse<>(400,e.getMessage(),null));
         }catch(UpdateObjectNotExists e){

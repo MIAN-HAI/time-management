@@ -10,7 +10,7 @@ import lombok.Data;
 public class UpdateRequestForToDo {
     private String title;
     private String priority;
-    private boolean isCompleted;
+    private Boolean isCompleted;
     private LocalDateTime updatedAt;
     private LocalDateTime deadline;
     private LocalDateTime reminderTime;
